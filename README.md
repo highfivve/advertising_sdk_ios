@@ -70,9 +70,9 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.1`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.3`).
 4. Choose the target where you want to add the package.
-5. Ensure `advertising_ios` is added to your target's "Frameworks, Libraries, and Embedded Content"
+5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded Content"
    section and is set to "Embed & Sign".
 
 ### CocoaPods
@@ -80,16 +80,16 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'advertising_ios', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.1'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/HighfivveAdvertising.git', :tag => '0.0.3'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
 
 ### Manual Installation (XCFramework)
 
-1. Download the latest `advertising_ios.xcframework` from
+1. Download the latest `HighfivveAdvertising.xcframework` from
    the [Releases page]([Link to your SDK's Releases page]).
-2. Drag and drop the `advertising_ios.xcframework` into your Xcode project's "Frameworks, Libraries,
+2. Drag and drop the `HighfivveAdvertising.xcframework` into your Xcode project's "Frameworks, Libraries,
    and Embedded Content" section in your target's General settings.
 3. Ensure "Embed & Sign" is selected.
 
@@ -100,7 +100,7 @@ pod 'advertising_ios', :git => 'https://github.com/highfivve/advertising_sdk_ios
 In any Swift file where you need to use the SDK:
 
 ```swift 
-import advertising_ios
+import HighfivveAdvertising
 ```
 
 ### 2. Info.plist Keys
@@ -110,9 +110,8 @@ import advertising_ios
 
 ```xml
 
-<key>NSUserTrackingUsageDescription</key><string>This identifier will be used to deliver
-personalized ads to you.
-</string>
+<key>NSUserTrackingUsageDescription</key>
+<string>This identifier will be used to deliver personalized ads to you.</string>
  ```
 
 2. **Add Google AdMob App ID:**
@@ -123,7 +122,8 @@ Add the following inside the `<dict>` section of your `ios/Runner/Info.plist`:
 
 ```xml
 
-<key>GADApplicationIdentifier</key><string>ca-app-pub-****************~**********</string>
+<key>GADApplicationIdentifier</key>
+<string>ca-app-pub-****************~**********</string>
 ```
 
 Replace ```ca-app-pub-****************~**********``` with your actual AdMob App ID.
@@ -157,7 +157,8 @@ Google
 
 ```xml
 
-<key>SKAdNetworkIdentifier</key><string>cstr6suwn9.skadnetwork</string>
+<key>SKAdNetworkIdentifier</key>
+<string>cstr6suwn9.skadnetwork</string>
 ```
 
 * **Google's SKAdNetwork ID:**
@@ -178,7 +179,7 @@ the `application(_:didFinishLaunchingWithOptions:)` method.
 ```swift 
 // AppDelegate.swift 
 import UIKit 
-import advertising_ios
+import HighfivveAdvertising
 @main class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
 
@@ -205,7 +206,7 @@ Interface Builder or programmatically.
 ```swift
 // MyViewController.swift 
 import UIKit 
-import advertising_ios 
+import HighfivveAdvertising 
 class MyViewController: UIViewController, HighfivveBannerAdViewDelegate { // Conform to delegate
   var bannerAdView: HighfivveBannerAdView?
 
