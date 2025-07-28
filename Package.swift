@@ -12,14 +12,14 @@ let package = Package(
     platforms: [.iOS(.v15)],
     products: [
         .library(
-            name: "advertising_ios",
-            targets: ["advertising_ios"]),
+            name: "HighfivveAdvertising",
+            targets: ["HighfivveAdvertising"]),
     ],
     targets: [
         .binaryTarget(
-            name: "advertising_ios",
-            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.3/advertising_ios.xcframework.zip",
-            checksum: "9e6d261597457c41a29746d0abd4ee085e8a4c9deea247aa75699fd12defc1d6" // generate with: swift package compute-checksum <zip>
+            name: "HighfivveAdvertising",
+            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.4/HighfivveAdvertising.xcframework.zip",
+            checksum: "933f9bb6b5d5680de58f6f76d24a0bb41686c419381173fde3ce627340aa5f28" // generate with: swift package compute-checksum <zip>
         )
     ]
 )

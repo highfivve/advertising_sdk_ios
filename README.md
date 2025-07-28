@@ -72,7 +72,8 @@ and may result in a lack of service or functionality.
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
 3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.3`).
 4. Choose the target where you want to add the package.
-5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded Content"
+5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
+   Content"
    section and is set to "Embed & Sign".
 
 ### CocoaPods
@@ -89,7 +90,8 @@ pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/HighfivveAdver
 
 1. Download the latest `HighfivveAdvertising.xcframework` from
    the [Releases page]([Link to your SDK's Releases page]).
-2. Drag and drop the `HighfivveAdvertising.xcframework` into your Xcode project's "Frameworks, Libraries,
+2. Drag and drop the `HighfivveAdvertising.xcframework` into your Xcode project's "Frameworks,
+   Libraries,
    and Embedded Content" section in your target's General settings.
 3. Ensure "Embed & Sign" is selected.
 
