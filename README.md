@@ -70,7 +70,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.3`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.5`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content"
@@ -81,7 +81,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/HighfivveAdvertising.git', :tag => '0.0.3'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.5'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
@@ -89,7 +89,7 @@ pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/HighfivveAdver
 ### Manual Installation (XCFramework)
 
 1. Download the latest `HighfivveAdvertising.xcframework` from
-   the [Releases page]([Link to your SDK's Releases page]).
+   the [Releases page](https://github.com/highfivve/advertising_sdk_ios/tree/main/Releases).
 2. Drag and drop the `HighfivveAdvertising.xcframework` into your Xcode project's "Frameworks,
    Libraries,
    and Embedded Content" section in your target's General settings.
