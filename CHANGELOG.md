@@ -5,6 +5,34 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.6] - 2025-08-01
+
+### Added
+
+- N/A
+
+### Changed
+
+- added missing privacy tracking domain to privacyInfo
+
+### Deprecated
+
+- N/A
+
+### Removed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Security
+
+- N/A
+
+---
+
 ## [0.0.5] - 2025-07-29
 
 ### Added

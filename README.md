@@ -70,7 +70,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.5`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.6`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content"
@@ -81,7 +81,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.5'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.6'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
@@ -111,7 +111,6 @@ import HighfivveAdvertising
    example, for App Tracking Transparency (if you plan to use IDFA):
 
 ```xml
-
 <key>NSUserTrackingUsageDescription</key>
 <string>This identifier will be used to deliver personalized ads to you.</string>
  ```
@@ -123,7 +122,6 @@ App ID to your app's Info.plist.
 Add the following inside the `<dict>` section of your `ios/Runner/Info.plist`:
 
 ```xml
-
 <key>GADApplicationIdentifier</key>
 <string>ca-app-pub-****************~**********</string>
 ```
@@ -143,7 +141,6 @@ Replace ```ca-app-pub-****************~**********``` with your actual AdMob App 
    `SKAdNetworkIdentifier` key.
 
 ```xml
-
 <key>SKAdNetworkItems</key><array>
 <dict>
     <key>SKAdNetworkIdentifier</key>
@@ -158,7 +155,6 @@ This SKAdNetworkItems are needed for this sdk:
 Google
 
 ```xml
-
 <key>SKAdNetworkIdentifier</key>
 <string>cstr6suwn9.skadnetwork</string>
 ```
@@ -179,7 +175,6 @@ Initialize the `HighfivveAdManager` shared instance, typically in your `AppDeleg
 the `application(_:didFinishLaunchingWithOptions:)` method.
 
 ```swift 
-// AppDelegate.swift 
 import UIKit 
 import HighfivveAdvertising
 @main class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -206,7 +201,6 @@ Interface Builder or programmatically.
 **Programmatic Example (in a UIViewController):**
 
 ```swift
-// MyViewController.swift 
 import UIKit 
 import HighfivveAdvertising 
 class MyViewController: UIViewController, HighfivveBannerAdViewDelegate { // Conform to delegate
@@ -266,7 +260,6 @@ class MyViewController: UIViewController, HighfivveBannerAdViewDelegate { // Con
 * `delegate: HighfivveBannerAdViewDelegate?`: To receive ad lifecycle events.
 * `rootViewController: UIViewController?`: Required for ads that present modal views.
 * `loadAd()`: Method to initiate an ad request.
-* (If applicable) `adSize: HighfivveAdSize`: Enum to specify desired banner size.
 
 ### 5. Handling Banner Ad Delegate Callbacks
 
@@ -301,20 +294,9 @@ extension MyViewController { // Or directly in class if not already conforming
 ```
 ## Supported Ad Networks
 
-- Highfivve Ad Network
 
 ## API Reference
 
-The complete API reference for this SDK is generated using DocC. You can build and view this
-documentation in Xcode:
-
-1. Open the `advertising_ios.xcworkspace` or `advertising_ios.xcodeproj`.
-2. Select **Product > Build Documentation**.
-   Xcode will compile the documentation from the source code comments and open it in the developer
-   documentation window.
-
-Alternatively, if you are viewing this SDK as part of a larger project, you might find the
-documentation under the "advertising_ios" module in Xcode's documentation browser.
 
 ## Privacy
 
@@ -342,10 +324,6 @@ app and all third-party SDKs, including this one.
 If this SDK mediates other ad networks, refer to their documentation for their privacy manifest
 details and required reasons API usage.
 
-## Example App
-
-An example application demonstrating the SDK's features can be found in the `/Example` directory of
-this repository [or link to a separate example repo].
 
 ## License
 
