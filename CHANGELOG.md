@@ -5,116 +5,51 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.7] - 2025-09-01
+
+## Added
+- added support for meta audience network ads and google bidding
+- added method to get all available adslots
+
+### Changed
+
+- readme updated to reflect new changes
+
+---
+
 ## [0.0.6] - 2025-08-01
 
-### Added
-
-- N/A
 
 ### Changed
 
 - added missing privacy tracking domain to privacyInfo
 
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-### Security
-
-- N/A
-
 ---
 
 ## [0.0.5] - 2025-07-29
-
-### Added
-
-- N/A
 
 ### Changed
 
 - README.md updated to reflect the new project name `HighfivveAdvertising`.
 - Updated podspec to add missing dependencies
 
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-### Security
-
-- N/A
-
 ---
 
 ## [0.0.4] - 2025-07-28
-
-### Added
-
-- N/A
 
 ### Changed
 
 - renamed project and files from `advertising_ios` to `HighfivveAdvertising`
 
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-### Security
-
-- N/A
-
 ---
 
 ## [0.0.3] - 2025-07-24
 
-### Added
-
-- N/A
-
-### Changed
-
-- N/A
-
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
 
 ### Fixed
 
 - advertising_ios.podspec set correct path for vendored_frameworks.
 
-### Security
-
-- N/A
 
 ---
 
@@ -155,25 +90,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delegate methods for ad lifecycle events (loaded, failed, clicked, presented, dismissed).
 - Basic configuration options for Ad Unit ID.
 - Example usage in the sample app.
-
-### Changed
-
-- N/A
-
-### Deprecated
-
-- N/A
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
-
-### Security
-
-- N/A
 
 ---
