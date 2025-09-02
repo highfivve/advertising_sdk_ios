@@ -19,7 +19,7 @@ let package = Package(
         .binaryTarget(
             name: "HighfivveAdvertising",
             url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.7/HighfivveAdvertising.xcframework.zip",
-            checksum: "7a2dd128d5cc44459973f24a1bcf8e912f4d832ad47bef2c420c0464f8dda11b" // generate with: swift package compute-checksum <zip>
+            checksum: "7d523c5e9ff70a2625574f1787c0a8b1b1179fcf9a884f0ed1828762dcead84a" // generate with: swift package compute-checksum <zip>
         )
         .target(
             name: "HighfivveAdvertising",
