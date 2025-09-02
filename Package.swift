@@ -18,8 +18,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "HighfivveAdvertising",
-            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.7/HighfivveAdvertising.xcframework.zip",
-            checksum: "e1640945c3a844307551f95f0233b511cd8912b490ad7a341ab845cc9b3577b9" // generate with: swift package compute-checksum <zip>
+            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.71/HighfivveAdvertising.xcframework.zip",
+            checksum: "d29ec132f02fa673a851dfd4153c966767d397dce1bef4551943f18bfd5f4213" // generate with: swift package compute-checksum <zip>
         )
         .target(
             name: "HighfivveAdvertising",
