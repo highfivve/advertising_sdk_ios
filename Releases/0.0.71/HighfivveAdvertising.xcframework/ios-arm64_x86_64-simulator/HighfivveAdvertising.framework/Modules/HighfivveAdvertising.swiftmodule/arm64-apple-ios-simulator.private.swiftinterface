@@ -11,39 +11,6 @@ import UIKit
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
-  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
-  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
-  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
-  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
-  @objc deinit
-}
-public struct HighfivveAdUnit : Swift.Codable {
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
-@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
-  @objc public static func i(_ message: Swift.String)
-  @objc public static func e(_ message: Swift.String)
-  @objc public static func w(_ message: Swift.String)
-  @objc override dynamic public init()
-  @objc deinit
-}
-public enum HighfivveAdEvent : Swift.Hashable {
-  case AD_LOADED
-  case AD_OPENED
-  case AD_CLOSED
-  case AD_FAILED_TO_LOAD
-  case AD_IMPRESSION
-  case AD_CLICKED
-  case AD_NOT_FOUND
-  case DISABLED_ALL
-  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
-    get
-  }
-}
 @objc public class HighfivveInterstitialAd : ObjectiveC.NSObject {
   weak public static var shared: HighfivveAdvertising.HighfivveInterstitialAd?
   public var adUnitPath: Swift.String?
@@ -64,6 +31,21 @@ extension HighfivveAdvertising.HighfivveInterstitialAd : GoogleMobileAds.FullScr
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adWillPresentFullScreenContent(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordImpression(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordClick(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
+}
+public enum HighfivveAdEvent : Swift.Hashable {
+  case AD_LOADED
+  case AD_OPENED
+  case AD_CLOSED
+  case AD_FAILED_TO_LOAD
+  case AD_IMPRESSION
+  case AD_CLICKED
+  case AD_NOT_FOUND
+  case DISABLED_ALL
+  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
 }
 public struct HighfivveAdSlot : Swift.Codable {
   public func encode(to encoder: any Swift.Encoder) throws
@@ -118,4 +100,22 @@ public protocol AdEventListener : AnyObject {
 public struct HighfivveAdUnitPath : Swift.Codable {
   public func encode(to encoder: any Swift.Encoder) throws
   public init(from decoder: any Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
+  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
+  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
+  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
+  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
+  @objc deinit
+}
+public struct HighfivveAdUnit : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
+  @objc public static func i(_ message: Swift.String)
+  @objc public static func e(_ message: Swift.String)
+  @objc public static func w(_ message: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
 }

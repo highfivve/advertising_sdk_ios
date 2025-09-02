@@ -11,13 +11,6 @@ import UIKit
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-public struct HighfivveAdSlot : Swift.Codable {
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
-public protocol AdEventListener : AnyObject {
-  func onAdEvent(event: HighfivveAdvertising.HighfivveAdEvent, data: [Swift.String : Any?]?)
-}
 @objc public class HighfivveInterstitialAd : ObjectiveC.NSObject {
   weak public static var shared: HighfivveAdvertising.HighfivveInterstitialAd?
   public var adUnitPath: Swift.String?
@@ -50,17 +43,6 @@ public struct HighfivveAdUnitPath : Swift.Codable {
   public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
   @objc deinit
 }
-public struct HighfivveAdUnit : Swift.Codable {
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
-@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
-  @objc public static func i(_ message: Swift.String)
-  @objc public static func e(_ message: Swift.String)
-  @objc public static func w(_ message: Swift.String)
-  @objc override dynamic public init()
-  @objc deinit
-}
 @objc @_inheritsConvenienceInitializers @_Concurrency.MainActor @preconcurrency public class HighfivveBannerAdViewController : UIKit.UIViewController, GoogleMobileAds.BannerViewDelegate {
   @_Concurrency.MainActor @preconcurrency public var adUnitPath: Swift.String?
   @_Concurrency.MainActor @preconcurrency public var position: Swift.String?
@@ -85,20 +67,16 @@ public struct HighfivveAdUnit : Swift.Codable {
   @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
-public enum HighfivveAdEvent : Swift.Hashable {
-  case AD_LOADED
-  case AD_OPENED
-  case AD_CLOSED
-  case AD_FAILED_TO_LOAD
-  case AD_IMPRESSION
-  case AD_CLICKED
-  case AD_NOT_FOUND
-  case DISABLED_ALL
-  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
-    get
-  }
+public struct HighfivveAdUnit : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
+  @objc public static func i(_ message: Swift.String)
+  @objc public static func e(_ message: Swift.String)
+  @objc public static func w(_ message: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
 }
 @objc @_Concurrency.MainActor @preconcurrency public class HighfivveBannerAd : UIKit.UIView, GoogleMobileAds.BannerViewDelegate, GoogleMobileAds.AdSizeDelegate {
   @_Concurrency.MainActor @preconcurrency weak public static var shared: HighfivveAdvertising.HighfivveBannerAd?
@@ -118,4 +96,26 @@ public enum HighfivveAdEvent : Swift.Hashable {
   @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidDismissScreen(_ bannerView: GoogleMobileAds.BannerView)
   @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidRecordClick(_ bannerView: GoogleMobileAds.BannerView)
   @objc deinit
+}
+public enum HighfivveAdEvent : Swift.Hashable {
+  case AD_LOADED
+  case AD_OPENED
+  case AD_CLOSED
+  case AD_FAILED_TO_LOAD
+  case AD_IMPRESSION
+  case AD_CLICKED
+  case AD_NOT_FOUND
+  case DISABLED_ALL
+  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+public struct HighfivveAdSlot : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public protocol AdEventListener : AnyObject {
+  func onAdEvent(event: HighfivveAdvertising.HighfivveAdEvent, data: [Swift.String : Any?]?)
 }
