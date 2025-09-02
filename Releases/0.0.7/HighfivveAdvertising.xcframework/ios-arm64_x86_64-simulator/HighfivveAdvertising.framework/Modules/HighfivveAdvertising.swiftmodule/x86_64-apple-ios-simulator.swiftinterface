@@ -1,6 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
-// swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name HighfivveAdvertising
+// swift-compiler-version: Apple Swift version 6.1.2 effective-5.10 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+// swift-module-flags: -target x86_64-apple-ios15.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name HighfivveAdvertising
+// swift-module-flags-ignorable:  -interface-compiler-version 6.1.2
 import Foundation
 import GoogleMobileAds
 import OSLog
@@ -10,25 +11,6 @@ import UIKit
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@objc @_Concurrency.MainActor @preconcurrency public class HighfivveBannerAd : UIKit.UIView, GoogleMobileAds.BannerViewDelegate, GoogleMobileAds.AdSizeDelegate {
-  @_Concurrency.MainActor @preconcurrency weak public static var shared: HighfivveAdvertising.HighfivveBannerAd?
-  @_Concurrency.MainActor @preconcurrency public var adUnitPath: Swift.String?
-  @_Concurrency.MainActor @preconcurrency public var isLoaded: Swift.Bool
-  @_Concurrency.MainActor @preconcurrency public var isLoading: Swift.Bool
-  @_Concurrency.MainActor @preconcurrency public var adView: GoogleMobileAds.AdManagerBannerView
-  @_Concurrency.MainActor @preconcurrency weak public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
-  @_Concurrency.MainActor @preconcurrency public init(adUnitPath: Swift.String? = nil)
-  @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
-  @_Concurrency.MainActor @preconcurrency public func loadAd()
-  @_Concurrency.MainActor @preconcurrency public func loadAd(adRequestModifier: ((GoogleMobileAds.Request) -> GoogleMobileAds.Request)? = nil)
-  @_Concurrency.MainActor @preconcurrency @objc public func adView(_ bannerView: GoogleMobileAds.BannerView, willChangeAdSizeTo size: GoogleMobileAds.AdSize)
-  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidReceiveAd(_ bannerView: GoogleMobileAds.BannerView)
-  @_Concurrency.MainActor @preconcurrency @objc public func bannerView(_ bannerView: GoogleMobileAds.BannerView, didFailToReceiveAdWithError error: any Swift.Error)
-  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidRecordImpression(_ bannerView: GoogleMobileAds.BannerView)
-  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidDismissScreen(_ bannerView: GoogleMobileAds.BannerView)
-  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidRecordClick(_ bannerView: GoogleMobileAds.BannerView)
-  @objc deinit
-}
 @objc @_inheritsConvenienceInitializers @_Concurrency.MainActor @preconcurrency public class HighfivveBannerAdViewController : UIKit.UIViewController, GoogleMobileAds.BannerViewDelegate {
   @_Concurrency.MainActor @preconcurrency public var adUnitPath: Swift.String?
   @_Concurrency.MainActor @preconcurrency public var position: Swift.String?
@@ -53,6 +35,39 @@ import _SwiftConcurrencyShims
   @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
+public struct HighfivveAdSlot : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+public protocol AdEventListener : AnyObject {
+  func onAdEvent(event: HighfivveAdvertising.HighfivveAdEvent, data: [Swift.String : Any?]?)
+}
+@objc @_Concurrency.MainActor @preconcurrency public class HighfivveBannerAd : UIKit.UIView, GoogleMobileAds.BannerViewDelegate, GoogleMobileAds.AdSizeDelegate {
+  @_Concurrency.MainActor @preconcurrency weak public static var shared: HighfivveAdvertising.HighfivveBannerAd?
+  @_Concurrency.MainActor @preconcurrency public var adUnitPath: Swift.String?
+  @_Concurrency.MainActor @preconcurrency public var isLoaded: Swift.Bool
+  @_Concurrency.MainActor @preconcurrency public var isLoading: Swift.Bool
+  @_Concurrency.MainActor @preconcurrency public var adView: GoogleMobileAds.AdManagerBannerView
+  @_Concurrency.MainActor @preconcurrency weak public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
+  @_Concurrency.MainActor @preconcurrency public init(adUnitPath: Swift.String? = nil)
+  @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor @preconcurrency public func loadAd()
+  @_Concurrency.MainActor @preconcurrency public func loadAd(adRequestModifier: ((GoogleMobileAds.Request) -> GoogleMobileAds.Request)? = nil)
+  @_Concurrency.MainActor @preconcurrency @objc public func adView(_ bannerView: GoogleMobileAds.BannerView, willChangeAdSizeTo size: GoogleMobileAds.AdSize)
+  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidReceiveAd(_ bannerView: GoogleMobileAds.BannerView)
+  @_Concurrency.MainActor @preconcurrency @objc public func bannerView(_ bannerView: GoogleMobileAds.BannerView, didFailToReceiveAdWithError error: any Swift.Error)
+  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidRecordImpression(_ bannerView: GoogleMobileAds.BannerView)
+  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidDismissScreen(_ bannerView: GoogleMobileAds.BannerView)
+  @_Concurrency.MainActor @preconcurrency @objc public func bannerViewDidRecordClick(_ bannerView: GoogleMobileAds.BannerView)
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
+  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
+  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
+  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
+  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
+  @objc deinit
+}
 @objc public class HighfivveInterstitialAd : ObjectiveC.NSObject {
   weak public static var shared: HighfivveAdvertising.HighfivveInterstitialAd?
   public var adUnitPath: Swift.String?
@@ -74,12 +89,12 @@ extension HighfivveAdvertising.HighfivveInterstitialAd : GoogleMobileAds.FullScr
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordImpression(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordClick(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
 }
-public struct HighfivveAdSlot : Swift.Codable {
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
-public protocol AdEventListener : AnyObject {
-  func onAdEvent(event: HighfivveAdvertising.HighfivveAdEvent, data: [Swift.String : Any?]?)
+@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
+  @objc public static func i(_ message: Swift.String)
+  @objc public static func e(_ message: Swift.String)
+  @objc public static func w(_ message: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
 }
 public enum HighfivveAdEvent : Swift.Hashable {
   case AD_LOADED
@@ -95,18 +110,4 @@ public enum HighfivveAdEvent : Swift.Hashable {
   public var hashValue: Swift.Int {
     get
   }
-}
-@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
-  @objc public static func i(_ message: Swift.String)
-  @objc public static func e(_ message: Swift.String)
-  @objc public static func w(_ message: Swift.String)
-  @objc override dynamic public init()
-  @objc deinit
-}
-@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
-  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
-  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
-  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
-  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
-  @objc deinit
 }

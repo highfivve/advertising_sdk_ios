@@ -1,6 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 6.0.3 effective-5.10 (swiftlang-6.0.3.1.10 clang-1600.0.30.1)
-// swift-module-flags: -target arm64-apple-ios15.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name HighfivveAdvertising
+// swift-compiler-version: Apple Swift version 6.1.2 effective-5.10 (swiftlang-6.1.2.1.2 clang-1700.0.13.5)
+// swift-module-flags: -target arm64-apple-ios15.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -module-name HighfivveAdvertising
+// swift-module-flags-ignorable:  -interface-compiler-version 6.1.2
 import Foundation
 import GoogleMobileAds
 import OSLog
@@ -53,6 +54,39 @@ import _SwiftConcurrencyShims
   @_Concurrency.MainActor @preconcurrency @objc required dynamic public init?(coder: Foundation.NSCoder)
   @objc deinit
 }
+public struct HighfivveAdSlot : Swift.Codable {
+  public func encode(to encoder: any Swift.Encoder) throws
+  public init(from decoder: any Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
+  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
+  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
+  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
+  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
+  @objc public static func i(_ message: Swift.String)
+  @objc public static func e(_ message: Swift.String)
+  @objc public static func w(_ message: Swift.String)
+  @objc override dynamic public init()
+  @objc deinit
+}
+public enum HighfivveAdEvent : Swift.Hashable {
+  case AD_LOADED
+  case AD_OPENED
+  case AD_CLOSED
+  case AD_FAILED_TO_LOAD
+  case AD_IMPRESSION
+  case AD_CLICKED
+  case AD_NOT_FOUND
+  case DISABLED_ALL
+  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
 @objc public class HighfivveInterstitialAd : ObjectiveC.NSObject {
   weak public static var shared: HighfivveAdvertising.HighfivveInterstitialAd?
   public var adUnitPath: Swift.String?
@@ -74,39 +108,6 @@ extension HighfivveAdvertising.HighfivveInterstitialAd : GoogleMobileAds.FullScr
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordImpression(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
   @_Concurrency.MainActor @preconcurrency @objc dynamic public func adDidRecordClick(_ ad: any GoogleMobileAds.FullScreenPresentingAd)
 }
-public struct HighfivveAdSlot : Swift.Codable {
-  public func encode(to encoder: any Swift.Encoder) throws
-  public init(from decoder: any Swift.Decoder) throws
-}
 public protocol AdEventListener : AnyObject {
   func onAdEvent(event: HighfivveAdvertising.HighfivveAdEvent, data: [Swift.String : Any?]?)
-}
-public enum HighfivveAdEvent : Swift.Hashable {
-  case AD_LOADED
-  case AD_OPENED
-  case AD_CLOSED
-  case AD_FAILED_TO_LOAD
-  case AD_IMPRESSION
-  case AD_CLICKED
-  case AD_NOT_FOUND
-  case DISABLED_ALL
-  public static func == (a: HighfivveAdvertising.HighfivveAdEvent, b: HighfivveAdvertising.HighfivveAdEvent) -> Swift.Bool
-  public func hash(into hasher: inout Swift.Hasher)
-  public var hashValue: Swift.Int {
-    get
-  }
-}
-@_inheritsConvenienceInitializers @objc public class HighfivveLog : ObjectiveC.NSObject {
-  @objc public static func i(_ message: Swift.String)
-  @objc public static func e(_ message: Swift.String)
-  @objc public static func w(_ message: Swift.String)
-  @objc override dynamic public init()
-  @objc deinit
-}
-@_hasMissingDesignatedInitializers public class HighfivveAdvertisingSdk {
-  public static let instance: HighfivveAdvertising.HighfivveAdvertisingSdk
-  public var adEventListener: (any HighfivveAdvertising.AdEventListener)?
-  public func initialize(bundleName: Swift.String, publisherCode: Swift.String)
-  public func getAvailableAdSlots() -> [HighfivveAdvertising.HighfivveAdSlot]
-  @objc deinit
 }
