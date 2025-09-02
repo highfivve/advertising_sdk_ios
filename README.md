@@ -70,7 +70,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.71`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.72`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content"
@@ -81,7 +81,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.71'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.72'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
