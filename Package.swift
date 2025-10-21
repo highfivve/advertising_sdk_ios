@@ -18,14 +18,14 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "HighfivveAdvertising",
-            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.72/HighfivveAdvertising.xcframework.zip",
-            checksum: "aac73449eb99c45c13039e6894e5de974aa8038d5dd2bc3f9de6711856cf9831" // generate with: swift package compute-checksum <zip>
+            url:"https://github.com/highfivve/advertising_sdk_ios/releases/0.0.73/HighfivveAdvertising.xcframework.zip",
+            checksum: "4d6a81c278957ffd1512d2edbe99781e9194a6501b55b34c23c8c35671495ebe" // generate with: swift package compute-checksum <zip>
         )
         .target(
             name: "HighfivveAdvertising",
             dependencies: [
                 .product(name: "GoogleMobileAds", package: "GoogleMobileAds"),
-                .product(name: "PrebidMobile", package: "PrebidMobile")
+                .product(name: "PrebidMobile", package: "PrebidMobile"),
             ],
         )
     ]
