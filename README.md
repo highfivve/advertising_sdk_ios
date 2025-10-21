@@ -152,9 +152,9 @@ Replace ```ca-app-pub-****************~**********``` with your actual AdMob App 
 
 This SKAdNetworkItems are needed for this sdk:
 
-Google
-Meta
-InMobi
+- Google
+- Meta
+- InMobi
 
 ```xml
 <key>SKAdNetworkIdentifier</key>
@@ -168,10 +168,8 @@ InMobi
 ```
 
 * **Google's SKAdNetwork ID:**
-    * **More Information from Apple:
-      ** [Configuring a Source App for SKAdNetwork](https://developer.apple.com/documentation/storekit/skadnetwork/configuring_a_source_app)
-    * **More Information from Google:
-      ** [Google Mobile Ads SDK iOS - SKAdNetwork](https://developers.google.com/admob/ios/quick-start#skadnetwork) (
+    * **More Information from Apple:** [Configuring a Source App for SKAdNetwork](https://developer.apple.com/documentation/storekit/skadnetwork/configuring_a_source_app)
+    * **More Information from Google:** [Google Mobile Ads SDK iOS - SKAdNetwork](https://developers.google.com/admob/ios/quick-start#skadnetwork) (
       Often covered within the Get Started or advanced setup pages for iOS 14+)
     * **Note:** Highfivve GmbH may provide an updated or consolidated list of
       `SKAdNetworkIdentifier` values to include, especially if mediating multiple networks. Always
@@ -303,7 +301,8 @@ extension MyViewController { // Or directly in class if not already conforming
 ## Supported Ad Networks
 
 The Highfivve Advertising iOS SDK supports mediation with the following ad networks:
-- Met (Facebook Audience Network)
+- Meta (Facebook Audience Network)
+- InMobi
 - Prebid
 
 ## API Reference
