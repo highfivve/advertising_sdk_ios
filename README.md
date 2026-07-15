@@ -40,8 +40,10 @@ and may result in a lack of service or functionality.
     - [1. Import SDK](#1-import-sdk)
     - [2. Info.plist Keys](#2-infoplist-keys)
     - [3. SDK Initialization](#3-sdk-initialization)
-    - [4. Displaying a Banner Ad](#4-displaying-a-banner-ad)
-    - [5. Handling Banner Ad Delegate Callbacks](#5-handling-banner-ad-delegate-callbacks)
+  - [4. Consent / Privacy (GDPR, GPP, CCPA)](#4-consent--privacy-gdpr-gpp-ccpa)
+  - [5. Displaying a Banner Ad](#5-displaying-a-banner-ad)
+  - [6. Handling Banner Ad Events](#6-handling-banner-ad-events)
+  - [7. Displaying an Interstitial Ad](#7-displaying-an-interstitial-ad)
 - [Supported Ad Networks](#supported-ad-networks)
 - [API Reference](#api-reference)
 - [Privacy](#privacy)
@@ -70,7 +72,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.73`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.74`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content"
@@ -81,7 +83,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.73'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.74'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
@@ -152,9 +154,9 @@ Replace ```ca-app-pub-****************~**********``` with your actual AdMob App 
 
 This SKAdNetworkItems are needed for this sdk:
 
-- Google
-- Meta
-- InMobi
+Google
+Meta
+InMobi
 
 ```xml
 <key>SKAdNetworkIdentifier</key>
@@ -168,8 +170,10 @@ This SKAdNetworkItems are needed for this sdk:
 ```
 
 * **Google's SKAdNetwork ID:**
-    * **More Information from Apple:** [Configuring a Source App for SKAdNetwork](https://developer.apple.com/documentation/storekit/skadnetwork/configuring_a_source_app)
-    * **More Information from Google:** [Google Mobile Ads SDK iOS - SKAdNetwork](https://developers.google.com/admob/ios/quick-start#skadnetwork) (
+    * **More Information from Apple:
+      ** [Configuring a Source App for SKAdNetwork](https://developer.apple.com/documentation/storekit/skadnetwork/configuring_a_source_app)
+    * **More Information from Google:
+      ** [Google Mobile Ads SDK iOS - SKAdNetwork](https://developers.google.com/admob/ios/quick-start#skadnetwork) (
       Often covered within the Get Started or advanced setup pages for iOS 14+)
     * **Note:** Highfivve GmbH may provide an updated or consolidated list of
       `SKAdNetworkIdentifier` values to include, especially if mediating multiple networks. Always
@@ -177,8 +181,8 @@ This SKAdNetworkItems are needed for this sdk:
 
 ### 3. SDK Initialization
 
-Initialize the `HighfivveAdManager` shared instance, typically in your `AppDelegate.swift` within
-the `application(_:didFinishLaunchingWithOptions:)` method.
+Initialize the `HighfivveAdvertisingSdk` shared instance, typically in your `AppDelegate.swift`
+within the `application(_:didFinishLaunchingWithOptions:)` method.
 
 ```swift 
 import UIKit 
@@ -188,9 +192,9 @@ import HighfivveAdvertising
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
-    HighfivveAdManager.shared.initialize(
+    HighfivveAdvertisingSdk.instance.initialize(
+        bundleName: "YOUR_BUNDLE_IDENTIFIER",
         publisherCode: "YOUR_PUBLISHER_CODE" // Provided by Highfivve GmbH
-        bundleName: "YOUR_BUNDLE_IDENTIFIER"
     )
     print("Highfivve Advertising SDK Initialized")
     return true
@@ -199,18 +203,51 @@ import HighfivveAdvertising
 }
 ```
 
-### 4. Displaying a Banner Ad
+### 4. Consent / Privacy (GDPR, GPP, CCPA)
 
-Use `HighfivveBannerAdView` (a `UIView` subclass) to display banner ads. You can add it via
-Interface Builder or programmatically.
+The SDK works with **any** Consent Management Platform (CMP) - it doesn't assume a specific one.
+
+**Zero-integration (recommended default):** if your CMP is IAB TCF/GPP-compliant, it already writes
+consent to the standard `IABTCF_TCString`/`IABTCF_gdprApplies`/`IABGPP_HDR_GppString`/
+`IABGPP_GppSID` keys in `UserDefaults`. Prebid and Google Ad Manager read these directly - you don't
+have to call anything, just make sure your CMP flow has run before ads are requested.
+
+**Explicit:** call `updateConsent` when you want to be explicit, your CMP doesn't write the standard
+keys, or to supply signals the standard keys don't cover (e.g. Meta Audience Network's Additional
+Consent string):
+
+```swift
+import HighfivveAdvertising
+
+HighfivveAdvertisingSdk.instance.updateConsent(
+    ConsentInfo(
+        personalizationState: .personalizedAllowed, // or .nonPersonalizedOnly / .adsDisallowed / .unknown
+        gdprApplies: true,
+        tcString: myCmp.tcString,
+        gppString: myCmp.gppString,
+        gppApplicableSections: myCmp.gppApplicableSections,
+        acString: myCmp.additionalConsentString // needed for Meta Audience Network
+    )
+)
+```
+
+Call this again whenever consent changes, not just once at startup. Every field is independent and
+additive - leave a field unset if you don't have that signal, and the SDK only overrides a given ad
+network's own implicit consent detection when the corresponding field is non-null.
+
+### 5. Displaying a Banner Ad
+
+Use `HighfivveBannerAdViewController` (a `UIViewController` subclass) to display banner ads, adding
+it as a child view controller.
 
 **Programmatic Example (in a UIViewController):**
 
 ```swift
-import UIKit 
-import HighfivveAdvertising 
-class MyViewController: UIViewController, HighfivveBannerAdViewDelegate { // Conform to delegate
-  var bannerAdView: HighfivveBannerAdView?
+import UIKit
+import HighfivveAdvertising
+
+class MyViewController: UIViewController, AdEventListener {
+  var bannerAdVC: HighfivveBannerAdViewController?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -218,95 +255,113 @@ class MyViewController: UIViewController, HighfivveBannerAdViewDelegate { // Con
   }
 
   func setupBannerAd() {
-    // 1. Create the banner ad view
-    bannerAdView = HighfivveBannerAdView(
-        position: "content_1", // Unique identifier for this ad placement
-        pageType: "article_list"       // Optional: Contextual page information
-        // You can also provide a specific ad size or let it use a default/server-defined size
-        // adSize: HighfivveAdSize.banner // Example
-    )
-    
-    guard let bannerAdView = bannerAdView else { return }
+    // 1. Create the banner ad view controller
+    let bannerAdVC = HighfivveBannerAdViewController()
+    bannerAdVC.position = "content_1" // Unique identifier for this ad placement
+    bannerAdVC.pageType = "article_list" // Optional: contextual page information
+    bannerAdVC.adEventListener = self
 
-    // 2. Set the delegate
-    bannerAdView.delegate = self
+    // Optional: configure automatic reload (see below for defaults)
+    // bannerAdVC.isAutoRefreshEnabled = true
+    // bannerAdVC.refreshInterval = 45
 
-    // 3. (Important) Set the root view controller for presenting modal content
-    bannerAdView.rootViewController = self 
+    self.bannerAdVC = bannerAdVC
 
-    // 4. Add to view hierarchy and set constraints
-    bannerAdView.translatesAutoresizingMaskIntoConstraints = false
-    view.addSubview(bannerAdView)
-
+    // 2. Add as a child view controller
+    addChild(bannerAdVC)
+    view.addSubview(bannerAdVC.view)
+    bannerAdVC.view.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
-        bannerAdView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-        bannerAdView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        // Add width/height constraints based on your adSize or let it size intrinsically.
-        // e.g., bannerAdView.heightAnchor.constraint(equalToConstant: 50) if using a fixed banner size.
+        bannerAdVC.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+        bannerAdVC.view.centerXAnchor.constraint(equalTo: view.centerXAnchor)
     ])
+    bannerAdVC.didMove(toParent: self)
 
-    // 5. Load the ad
-    bannerAdView.loadAd()
+    // 3. Load the ad
+    bannerAdVC.loadAd()
   }
 
-// See next section for delegate methods
+  // See next section for the AdEventListener callback
+  func onAdEvent(event: HighfivveAdEvent, data: [String: Any?]?) {
+    print("Banner ad event: \(event), data: \(String(describing: data))")
+  }
 
   deinit {
-    bannerAdView?.delegate = nil // Good practice to nil out delegates
-    // The bannerAdView itself will be deallocated if it's no longer referenced.
-    // If it has strong internal timers/observers, ensure its `destroy()` or equivalent is called.
+    bannerAdVC?.stopAutoRefresh() // Cancels any pending reload
   }
 }
 ```
 
-**Key `HighfivveBannerAdView` properties (from DocC):**
+**Key `HighfivveBannerAdViewController` properties:**
 
-* `position: String`: Required. Unique identifier for the ad placement.
+* `position: String?`: Unique identifier for the ad placement.
 * `pageType: String?`: Optional. Contextual information about the page.
-* `delegate: HighfivveBannerAdViewDelegate?`: To receive ad lifecycle events.
-* `rootViewController: UIViewController?`: Required for ads that present modal views.
+* `adEventListener: AdEventListener?`: To receive ad lifecycle events (see next section).
 * `loadAd()`: Method to initiate an ad request.
+* `isAutoRefreshEnabled: Bool` / `refreshInterval: TimeInterval`: see below.
+* `stopAutoRefresh()`: Cancels any pending automatic reload - call this when disposing of the view
+  controller.
 
-### 5. Handling Banner Ad Delegate Callbacks
+**Automatic banner refresh:** the banner reloads itself on an interval by default (a client-side
+reload is required so header bidding runs a fresh auction on every reload, rather than relying on
+Google Ad Manager's own server-side refresh).
 
-Conform to the `HighfivveBannerAdViewDelegate` protocol to respond to banner ad events.
+* `isAutoRefreshEnabled` - defaults to `true`. Disabling it cancels any pending reload immediately.
+* `refreshInterval` - defaults to 30 seconds. Coerced to a minimum of 10 seconds to guard against
+  runaway reload loops.
+
+### 6. Handling Banner Ad Events
+
+Conform to the `AdEventListener` protocol and assign yourself to the banner's `adEventListener`
+property, as shown above. `onAdEvent(event:data:)` is called for every lifecycle event - see
+`HighfivveAdEvent` for the full list (`AD_LOADED`, `AD_FAILED_TO_LOAD`, `AD_OPENED`, `AD_CLOSED`,
+`AD_CLICKED`, `AD_IMPRESSION`, `AD_NOT_FOUND`, `DISABLED_ALL`, `BLOCKED_BY_CONSENT`).
+
+### 7. Displaying an Interstitial Ad
+
+Interstitial ads are managed with the `HighfivveInterstitialAd` class rather than a view - construct
+one per placement, load it ahead of time, and show it when appropriate:
 
 ```swift
-// Extension for MyViewController or within the class 
-extension MyViewController { // Or directly in class if not already conforming
-  func bannerAdViewDidLoadAd(_ bannerView: BannerView) {
-    print("Banner ad loaded for position: \(bannerView.position)")
-    // Ad is loaded and ready to be displayed.
-    // View might resize itself or you might need to adjust layout.
-  }
+import HighfivveAdvertising
 
-  func bannerAdView(_ bannerView: BannerView, didFailToLoadAdWithError error: Error) {
-    print("Banner ad for position \(bannerView.position) failed with error: \(error.localizedDescription)")
-    // Handle error, e.g., hide the banner view or try loading again later.
-  }
+let interstitialAd = HighfivveInterstitialAd(position: "interstitial_main")
+interstitialAd.pageType = "article_list" // optional
 
-  func bannerAdViewWillPresentScreen(_ bannerView: BannerView) {
-    print("Banner ad will present a modal screen (e.g., ad clicked). Position: \(bannerView.position)")
-  }
+// Optional: configure automatic preloading of the next ad after the current one is dismissed
+// interstitialAd.isAutoReloadEnabled = true // default
+// interstitialAd.reloadDelay = 0 // default: preload immediately after dismissal
 
-  func bannerAdViewDidDismissScreen(_ bannerView: BannerView) {
-    print("Banner ad did dismiss a modal screen. Position: \(bannerView.position)")
-  }
+interstitialAd.adEventListener = self // conforms to AdEventListener, see above
 
-  func bannerAdViewDidRecordImpression(_ bannerView: BannerView) {
-    print("Banner ad impression recorded for position: \(bannerView.position)")
-  }
-}
+interstitialAd.loadAd()
+
+// Later, once you've observed an .AD_LOADED event:
+interstitialAd.show(from: self)
 ```
+
+By default, the SDK automatically preloads the next interstitial as soon as the current one is
+dismissed (`isAutoReloadEnabled = true`, `reloadDelay = 0`) - disable it or add a delay if you want
+more control over when the next ad request happens.
+
 ## Supported Ad Networks
 
-The Highfivve Advertising iOS SDK supports mediation with the following ad networks:
-- Meta (Facebook Audience Network)
-- InMobi
-- Prebid
+- **Prebid Mobile** - the SDK's real-time header bidding partner, enabled by default via remote
+  configuration.
+- **Meta Audience Network** - can be enabled as a Google Ad Manager mediation partner via remote
+  configuration; add the `GoogleMobileAdsMediationFacebook`/`FBAudienceNetwork` pods yourself if you
+  need it.
+- **InMobi** - not yet available on iOS. The remote config model for it exists, but there's no
+  InMobi integration wired up on this platform yet (unlike Android).
 
 ## API Reference
 
+Full DocC-style documentation comments live in the source under `HighfivveAdvertising/Classes` - the
+public entry points are `HighfivveAdvertisingSdk` (SDK initialization and consent),
+`HighfivveBannerAdViewController` (banner ads), `HighfivveInterstitialAd` (interstitial ads), and
+the
+shared `AdEventListener`/`HighfivveAdEvent` types. Browse the source on
+[GitHub](https://github.com/highfivve/advertising_sdk_ios) for full class/method documentation.
 
 ## Privacy
 

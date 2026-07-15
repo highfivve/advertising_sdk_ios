@@ -5,6 +5,55 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.74] - 2026-07-15
+
+### Added
+
+- GDPR/GPP/CCPA consent support: `HighfivveAdvertisingSdk.updateConsent(_:)`, `ConsentInfo`,
+  `AdPersonalizationState`, and a new `.BLOCKED_BY_CONSENT` ad event fired when an ad request is
+  skipped due to the current consent state.
+- `HighfivveBannerAdViewController` now automatically reloads itself on an interval (client-side, so
+  header bidding runs a fresh auction on every reload). Configurable via `isAutoRefreshEnabled`
+  (default `true`) and `refreshInterval` (default 30s, coerced to a 10s minimum). Callers must call
+  the new `stopAutoRefresh()` when disposing of the view controller.
+- `HighfivveInterstitialAd` now automatically preloads the next ad after the current one is
+  dismissed. Configurable via `isAutoReloadEnabled` (default `true`) and `reloadDelay` (default 0 =
+  immediate).
+- Published podspec now declares `GoogleMobileAdsMediationInMobi`/`InMobiSDK` as real dependencies -
+  `otool`/`nm` on the shipped XCFramework confirmed it links against InMobi at the binary level, but
+  the published podspec never declared it, so consumers of the bare `HighfivveAdvertising` pod
+  (without the Flutter plugin) got a missing-framework link error.
+
+### Changed
+
+- `Package.swift` fixed (was non-compiling: duplicate target name between the binary and wrapper
+  targets, a missing comma, no `dependencies:` array for the packages it referenced, and the
+  `swift-tools-version` comment wasn't on the first line) and bumped to tools-version 5.5 (required
+  for the `.iOS(.v15)` platform declaration). Still not wired into any build/CI - the wrapper
+  target still needs a source file added as part of the CocoaPods → SPM migration.
+- `Google-Mobile-Ads-SDK` pinned to `~> 12.12` (was unconstrained) in both the internal `Podfile`
+  and
+  the published podspec, to stop the two from silently resolving to different versions.
+
+### Removed
+
+- Dead legacy `HighfivveBannerAd` (`UIView` subclass, superseded by
+  `HighfivveBannerAdViewController`) and its unused `HighfivveInterstitialAd.shared` singleton
+  (set but never read anywhere).
+
+### Fixed
+
+- `HighfivveBannerAdViewController`: the Prebid-won creative resize logic was entirely commented out
+  (blocked on a `BannerView` type ambiguity between GoogleMobileAds and PrebidMobile) - fixed by
+  qualifying the type, so banners now actually resize to the winning creative's real size instead of
+  the default GAM size.
+- `isLoading` on the banner/interstitial no longer gets stuck `true` forever after an
+  `AD_NOT_FOUND` event.
+- Several `HighfivveBannerAdViewController` delegate callbacks (`bannerViewWillPresentScreen`,
+  `bannerViewWillDismissScreen`, `bannerViewDidDismissScreen`, `bannerViewDidRecordClick`) all
+  logged
+  the same copy-pasted "Ad impression recorded" message regardless of which callback actually fired.
+
 ## [0.0.73] - 2025-10-21
 
 ### Changed
