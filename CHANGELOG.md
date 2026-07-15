@@ -5,6 +5,16 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.75] - 2026-07-15
+
+### Fixed
+
+- Re-release of 0.0.74: that tag's release pipeline built and pushed the XCFramework/public GitHub
+  release successfully, but failed at the `pod lib lint` step (warnings-as-errors from
+  PrebidMobile's own headers, unrelated to this SDK's code) before it reached CocoaPods trunk -
+  0.0.74 was never actually published to CocoaPods. No SDK source changes from 0.0.74; the release
+  workflow's lint step now passes `--allow-warnings`.
+
 ## [0.0.74] - 2026-07-15
 
 ### Added
