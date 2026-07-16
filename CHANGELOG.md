@@ -5,6 +5,19 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.76] - 2026-07-16
+
+### Added
+
+- Swift Package Manager support finished: `Package.swift` moved to the package root (sibling to
+  `HighfivveAdvertising/`, no longer inside the folder the Xcode project's file-system-synchronized
+  group scans) and the `HighfivveAdvertisingWrapper` target now has its source file at
+  `Sources/HighfivveAdvertisingWrapper/` - it only bundles the binary xcframework with the
+  GoogleMobileAds/PrebidMobile SwiftPM dependencies, mirroring the podspec's `s.dependency`
+  declarations. Verified end-to-end with a local XCFramework build and `xcodebuild build -scheme
+  HighfivveAdvertising -destination 'generic/platform=iOS Simulator'`. Known gap: InMobiSDK has no
+  official SwiftPM distribution, so InMobi mediation still isn't available to SPM consumers.
+
 ## [0.0.75] - 2026-07-15
 
 ### Fixed

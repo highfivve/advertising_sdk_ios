@@ -7,19 +7,18 @@
 //
 import PackageDescription
 
-// NOTE: Not yet wired into any build or CI - advertising_ios still builds via CocoaPods (see
-// ../Podfile) and this manifest is only templated into the published repo by
-// .github/workflows/publish_advertising_sdks.yml. `swift package dump-package` confirms the
-// manifest itself parses correctly, but two things still need finishing as part of the
-// CocoaPods -> SPM migration:
-//  - `HighfivveAdvertisingWrapper` needs a source file (e.g. re-exporting the three dependency
-//    modules) - deliberately not added here, because this package's root is the same
-//    `HighfivveAdvertising/` folder the Xcode project's synchronized group scans, so any file
-//    under a new `Sources/` folder here gets swept into the *CocoaPods* build target too and
-//    breaks it. Either give the wrapper target's source an explicit `path:` outside this folder,
-//    or add an Xcode synchronized-group exception for it.
-//  - InMobiSDK has no official SPM distribution, so InMobi mediation isn't available to SPM
-//    consumers until InMobi ships one or we vendor it manually as a binary target.
+// This manifest lives at the package root (sibling to `HighfivveAdvertising/`, not inside it) so
+// that `HighfivveAdvertisingWrapper`'s source directory (`Sources/HighfivveAdvertisingWrapper/`,
+// SwiftPM's default convention for an unqualified target path) stays outside the
+// `HighfivveAdvertising/` folder that the Xcode project's file-system-synchronized group scans -
+// putting it inside would silently sweep the wrapper's source into the *CocoaPods* build target
+// too and break that build.
+//
+// Templated into the published repo by .github/workflows/publish_advertising_sdks.yml, which
+// substitutes 0.0.76/13ff629d4cff8739d456868a00e7ae50f7694a702785899f4a3237114f5fe537 and also copies `Sources/` alongside it.
+//
+// Known gap: InMobiSDK has no official SwiftPM distribution, so InMobi mediation isn't available
+// to SPM consumers until InMobi ships one or we vendor it manually as a binary target.
 let package = Package(
     name: "HighfivveAdvertising",
     platforms: [.iOS(.v15)],
@@ -35,8 +34,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "HighfivveAdvertisingBinary",
-            url: "https://github.com/highfivve/advertising_sdk_ios/releases/download/0.0.75/HighfivveAdvertising.xcframework.zip",
-            checksum: "59988b33f377d3670013322c0bbd3ae31404db8eb96123c6240ea3d87162d17e" // generate with: swift package compute-checksum <zip>
+            url: "https://github.com/highfivve/advertising_sdk_ios/releases/download/0.0.76/HighfivveAdvertising.xcframework.zip",
+            checksum: "13ff629d4cff8739d456868a00e7ae50f7694a702785899f4a3237114f5fe537" // generate with: swift package compute-checksum <zip>
         ),
         .target(
             name: "HighfivveAdvertisingWrapper",
