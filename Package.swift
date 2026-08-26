@@ -15,7 +15,7 @@ import PackageDescription
 // too and break that build.
 //
 // Templated into the published repo by .github/workflows/publish_advertising_sdks.yml, which
-// substitutes 0.0.76/13ff629d4cff8739d456868a00e7ae50f7694a702785899f4a3237114f5fe537 and also copies `Sources/` alongside it.
+// substitutes 0.0.8/cff3df65a1c7b6429f17a9ced78d75c51c7466d66872dcbb5d7e587c1938ea16 and also copies `Sources/` alongside it.
 //
 // Known gap: InMobiSDK has no official SwiftPM distribution, so InMobi mediation isn't available
 // to SPM consumers until InMobi ships one or we vendor it manually as a binary target.
@@ -34,8 +34,8 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "HighfivveAdvertisingBinary",
-            url: "https://github.com/highfivve/advertising_sdk_ios/releases/download/0.0.76/HighfivveAdvertising.xcframework.zip",
-            checksum: "13ff629d4cff8739d456868a00e7ae50f7694a702785899f4a3237114f5fe537" // generate with: swift package compute-checksum <zip>
+            url: "https://github.com/highfivve/advertising_sdk_ios/releases/download/0.0.8/HighfivveAdvertising.xcframework.zip",
+            checksum: "cff3df65a1c7b6429f17a9ced78d75c51c7466d66872dcbb5d7e587c1938ea16" // generate with: swift package compute-checksum <zip>
         ),
         .target(
             name: "HighfivveAdvertisingWrapper",

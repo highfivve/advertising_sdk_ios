@@ -5,6 +5,35 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.8] - 2026-08-25
+
+### Added
+
+- Audit/debug mode: `HighfivveAdvertisingSdk.setAuditModeEnabled(_:)` swaps banner/interstitial ad
+  requests to Google's public test ad unit IDs and enables Prebid Server debug echo + verbose
+  Prebid SDK logging. `getDebugSnapshot()` reports the SDK's actual internal state for QA/publisher
+  diagnostics: config-fetch outcome/source/timestamp (new - previously computed transiently and
+  discarded; captured pre-`filterConfigForIOS` so it reflects the real server response, not this
+  platform's filtered view), the raw `app-config.json` last received, active header-bidding SDKs,
+  the current consent snapshot, and a bounded log of recent ad lifecycle events (new -
+  `HighfivveBannerAdViewController`/`HighfivveInterstitialAd` record every event regardless of
+  whether a listener is assigned, so this is visible without wiring one up first).
+  `openAdInspector(from:onDone:)` wraps Google's native
+  `MobileAds.shared.presentAdInspector(from:completionHandler:)`; `setTestDeviceIds(_:)` registers
+  this device as a Google Mobile Ads test device for physical-device testing.
+- `HighfivveDebugAuditViewController`: a ready-to-use, self-contained audit/debug screen for
+  native (non-Flutter) consumers of this SDK, showing everything `getDebugSnapshot()` exposes plus
+  configured ad slots and the recent-events log. Present with
+  `HighfivveDebugAuditViewController.present(from: someViewController)`. Mirrors the Flutter
+  plugin's `HighfivveDebugAuditView`/`HighfivveDebugAuditPage`.
+
+### Removed
+
+- Dead, commented-out Prebid public-test-server scaffolding (`testHost`/`testId`/`testBannerId`/
+  `isTest` in `PrebidSdk.swift`) - a different mechanism from the new audit mode's `pbsDebug`
+  approach against our own Prebid Server account; removed to avoid two half-built "test mode"
+  concepts for Prebid.
+
 ## [0.0.76] - 2026-07-16
 
 ### Added

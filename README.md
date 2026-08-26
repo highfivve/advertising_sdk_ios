@@ -44,6 +44,7 @@ and may result in a lack of service or functionality.
   - [5. Displaying a Banner Ad](#5-displaying-a-banner-ad)
   - [6. Handling Banner Ad Events](#6-handling-banner-ad-events)
   - [7. Displaying an Interstitial Ad](#7-displaying-an-interstitial-ad)
+  - [8. Audit / Debug Mode](#8-audit--debug-mode)
 - [Supported Ad Networks](#supported-ad-networks)
 - [API Reference](#api-reference)
 - [Privacy](#privacy)
@@ -59,6 +60,8 @@ and may result in a lack of service or functionality.
 - Delegate protocols for comprehensive ad lifecycle event tracking.
 - Customizable ad loading using parameters like `position` and `pageType`.
 - Built with Swift, compatible with Objective-C.
+- Built-in audit/debug mode with a ready-made diagnostics screen (see
+  [Audit / Debug Mode](#8-audit--debug-mode)).
 
 ## Requirements
 
@@ -72,7 +75,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.76`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.8`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content" section and is set to "Embed & Sign".
@@ -82,7 +85,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.76'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.8'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
@@ -343,6 +346,59 @@ By default, the SDK automatically preloads the next interstitial as soon as the 
 dismissed (`isAutoReloadEnabled = true`, `reloadDelay = 0`) - disable it or add a delay if you want
 more control over when the next ad request happens.
 
+### 8. Audit / Debug Mode
+
+The SDK has a built-in audit/debug mode for diagnosing technical integration problems: whether ad
+slots are correctly configured, whether ad requests are actually being sent, whether consent is
+present, and whether `app-config.json` is loading correctly (with its raw contents). It's intended
+for QA/publisher diagnostics, not end users - gate access to it however you already gate internal
+tooling in your app (a hidden settings row, a debug-build-only menu entry, a shake gesture, ...).
+
+**Fastest path - present the ready-made screen:**
+
+```swift
+import HighfivveAdvertising
+
+HighfivveDebugAuditViewController.present(from: self)
+```
+
+This presents a self-contained view controller (wrapped in its own navigation bar with a close
+button) showing:
+
+- Audit mode on/off toggle, plus a button to open Google's native **Ad Inspector**.
+- `app-config.json` fetch status (loaded/failed/never fetched, source, timestamp) and its raw
+  contents.
+- Configured ad slots, each marked once an ad event has actually been observed for it.
+- Active header-bidding SDKs.
+- Current consent state.
+- A chronological log of recent ad lifecycle events - recorded regardless of whether an
+  `AdEventListener` is assigned, so it's visible without wiring one up first.
+
+**Or build your own UI** against the same underlying API on `HighfivveAdvertisingSdk`:
+
+```swift
+// Turn audit mode on/off. When enabled, banner/interstitial requests are swapped to Google's
+// public test ad unit IDs (so real "Test Ad" creatives serve instead of production inventory),
+// and Prebid Server debug echo + verbose Prebid SDK logging are enabled.
+HighfivveAdvertisingSdk.instance.setAuditModeEnabled(true)
+
+// A snapshot of the SDK's actual internal state - safe to call at any time.
+let snapshot = HighfivveAdvertisingSdk.instance.getDebugSnapshot()
+// snapshot.configFetchStatus, snapshot.rawConfigJson, snapshot.activeSdks,
+// snapshot.consentSnapshot, snapshot.recentEvents, snapshot.testDeviceId
+
+// Opens Google's native Ad Inspector - a full on-device viewer for real ad requests/responses
+// and the mediation waterfall. Requires this device to be a registered Google Mobile Ads test
+// device; simulators are registered automatically, physical devices need setTestDeviceIds below.
+HighfivveAdvertisingSdk.instance.openAdInspector(from: self) { error in
+    // error is non-nil if Ad Inspector couldn't open
+}
+
+// Google's SDK only reveals a physical device's test-device ID by logging it to Console the
+// first time an (unregistered) ad request is made - call this with that value once you have it.
+HighfivveAdvertisingSdk.instance.setTestDeviceIds(["YOUR_TEST_DEVICE_ID"])
+```
+
 ## Supported Ad Networks
 
 - **Prebid Mobile** - the SDK's real-time header bidding partner, enabled by default via remote
@@ -356,10 +412,10 @@ more control over when the next ad request happens.
 ## API Reference
 
 Full DocC-style documentation comments live in the source under `HighfivveAdvertising/Classes` - the
-public entry points are `HighfivveAdvertisingSdk` (SDK initialization and consent),
-`HighfivveBannerAdViewController` (banner ads), `HighfivveInterstitialAd` (interstitial ads), and
-the
-shared `AdEventListener`/`HighfivveAdEvent` types. Browse the source on
+public entry points are `HighfivveAdvertisingSdk` (SDK initialization, consent, and audit/debug
+mode), `HighfivveBannerAdViewController` (banner ads), `HighfivveInterstitialAd` (interstitial
+ads), `HighfivveDebugAuditViewController` (ready-made diagnostics screen), and the shared
+`AdEventListener`/`HighfivveAdEvent` types. Browse the source on
 [GitHub](https://github.com/highfivve/advertising_sdk_ios) for full class/method documentation.
 
 ## Privacy
