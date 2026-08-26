@@ -5,6 +5,15 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.80] - 2026-08-26
+
+### Fixed
+
+- Re-release of 0.0.8: under CocoaPods/semver version comparison, `0.0.8` sorts as patch `8`, which
+  is *lower* than the already-published `0.0.76` (patch `76`) - so apps already on 0.0.76+ had no
+  upgrade path to 0.0.8, and CocoaPods would refuse to resolve it as newer. No SDK source changes
+  from 0.0.8; this release exists solely to correct the version number.
+
 ## [0.0.8] - 2026-08-25
 
 ### Added
