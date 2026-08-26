@@ -5,6 +5,19 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.81] - 2026-08-26
+
+### Fixed
+
+- Swift Package Manager resolution was broken on 0.0.80: its published `Package.swift` declared
+  `HighfivveAdvertisingBinary` as a remote `.binaryTarget(url:, checksum:)` pointing at a GitHub
+  Release download URL, but the release workflow only ever committed the XCFramework into the git
+  repo (`Releases/<version>/HighfivveAdvertising.xcframework`) - it never created an actual GitHub
+  Release object, so that URL 404s regardless of the file being present in the tree. The binary
+  target now resolves via a local `path:` into that same committed directory instead, mirroring
+  exactly how the CocoaPods podspec's `vendored_frameworks` already resolves it. CocoaPods
+  consumers were unaffected by this - only SwiftPM. No functional changes to the SDK itself.
+
 ## [0.0.80] - 2026-08-26
 
 ### Fixed
