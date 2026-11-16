@@ -7,7 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.83] - 2026-11-16
+
+> **This is the last version published to CocoaPods.** CocoaPods trunk becomes read-only on 2026-12-02, so
+> every release after this one is available through Swift Package Manager only.
+
+### Fixed
+
+- 0.0.82 crashed at launch ("Library not loaded: @rpath/FBAudienceNetwork.framework") in every app that did
+  not embed `FBAudienceNetwork` and `InMobiSDK` itself. The XCFramework was built with the Facebook and InMobi
+  mediation pods in its Podfile; their linker flags ended up as hard dependencies of the shipped binary,
+  although the SDK never imports them (Meta Audience Network is only detected at runtime). The framework is
+  now built without those pods and hard-links nothing but its own Prebid resource framework
+  (`OMSDK_Prebidorg`, supplied by Prebid). Apps that want Meta Audience Network add
+  `GoogleMobileAdsMediationFacebook`/`FBAudienceNetwork` themselves.
+- The CocoaPods podspec of 0.0.82 still required `Google-Mobile-Ads-SDK ~> 12.12` although the framework is
+  built against Google Mobile Ads 13.12 (only the Prebid pin had been updated). The podspec now requires
+  `~> 13.12` and no longer lists InMobi.
+
+### Changed
+
+- The CocoaPods podspec has no mediation dependencies any more (`GoogleMobileAdsMediationInMobi`, `InMobiSDK`).
+
 ## [0.0.82] - 2026-11-16
+
+> **Do not use this version.** Apps crash at launch unless they embed `FBAudienceNetwork` and `InMobiSDK`
+> themselves, and the CocoaPods podspec has the wrong Google Mobile Ads pin. Fixed in 0.0.83.
 
 ### Added
 

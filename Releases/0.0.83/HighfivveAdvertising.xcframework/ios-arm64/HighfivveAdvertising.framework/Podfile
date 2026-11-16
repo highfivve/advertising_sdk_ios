@@ -1,0 +1,23 @@
+# Podfile for HighfivveAdvertising framework project
+platform :ios, '15.0'
+                
+project 'HighfivveAdvertising', {
+    'Debug' => :debug,
+    'Profile' => :release,
+    'Release' => :release,
+}
+                
+
+target 'HighfivveAdvertising' do
+ use_frameworks! :linkage => :static
+ use_modular_headers!
+
+ pod 'Google-Mobile-Ads-SDK', '~> 13.12'
+ pod 'PrebidMobile', '~> 3.4.1'
+ # Deliberately NO mediation pods (Meta/InMobi) here. Their linker flags end up in the XCFramework's
+ # load commands as hard @rpath dependencies, so every app that does not embed them crashes at launch
+ # ("Library not loaded: FBAudienceNetwork.framework", 0.0.82). The SDK never imports them: Meta is
+ # only detected at runtime with NSClassFromString, so apps that want a network add its pod themselves.
+     
+end
+        

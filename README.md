@@ -76,7 +76,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.82`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.83`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content" section and is set to "Embed & Sign".
@@ -86,10 +86,13 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.82'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.83'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
+
+> **CocoaPods is being retired.** 0.0.83 is the last version published to CocoaPods (trunk becomes read-only on
+> 2026-12-02); later versions are Swift Package Manager only. Do not use 0.0.82: it crashes at launch.
 
 ### Manual Installation (XCFramework)
 

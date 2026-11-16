@@ -15,10 +15,10 @@ import PackageDescription
 // too and break that build.
 //
 // Templated into the published repo by .github/workflows/publish_advertising_sdks.yml, which
-// substitutes 0.0.82 and also copies `Sources/` alongside it. The binary target points at the
+// substitutes 0.0.83 and also copies `Sources/` alongside it. The binary target points at the
 // XCFramework via a local `path:`, not a remote `url:`/GitHub Release asset - mirrors exactly how
 // the CocoaPods podspec's `vendored_frameworks` resolves it (both read the same
-// Releases/0.0.82/HighfivveAdvertising.xcframework already committed to this repo by the
+// Releases/0.0.83/HighfivveAdvertising.xcframework already committed to this repo by the
 // workflow), and avoids depending on a GitHub Release object existing for the tag.
 //
 // Known gap: InMobiSDK has no official SwiftPM distribution, so InMobi mediation isn't available
@@ -38,7 +38,7 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "HighfivveAdvertisingBinary",
-            path: "Releases/0.0.82/HighfivveAdvertising.xcframework"
+            path: "Releases/0.0.83/HighfivveAdvertising.xcframework"
         ),
         .target(
             name: "HighfivveAdvertisingWrapper",
