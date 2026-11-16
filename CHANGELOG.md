@@ -5,6 +5,60 @@ All notable changes to the `advertising_ios` SDK will be documented in this file
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.0.82] - 2026-11-16
+
+### Added
+
+- `HighfivveBannerAdViewController.setRefreshPaused(_:)`: pauses/resumes the automatic refresh
+  without touching the loaded ad, so a banner that is scrolled off screen stops requesting ads and
+  resumes once it is viewable again. The first load still happens while paused (prefetch); on
+  resume it refreshes after what is left of the interval.
+
+- Opt-in request tracing: `HighfivveAdvertisingSdk.setRequestLoggingEnabled(_:)` (off by default).
+  While enabled, everything the SDK decides and sends around an ad request is written to the
+  console with the prefix `highfivve-trace`: an environment snapshot (ATT status and IDFA
+  availability, consent state incl. what the CMP stored in `UserDefaults`, Prebid settings), the
+  config fetch, every banner/interstitial request (ad unit, sizes, the key-values Prebid returned
+  versus what is actually on the request, consent extras) and its result, and the exact OpenRTB
+  request/response exchanged with Prebid Server. Unlike audit mode it does not swap ad units or add
+  `test:1` to Prebid auctions. The output can contain the advertising ID and consent string - for
+  debugging only.
+
+### Changed
+
+- Dependencies updated: Google Mobile Ads SDK `~> 12.12` -> `~> 13.12`, Prebid Mobile `~> 3.0.0` ->
+  `~> 3.4.1`, InMobi mediation adapter `10.8.8.0` -> `11.4.1.0` with `InMobiSDK` `11.4.1` (the
+  current adapters require Google Mobile Ads 13.3+), Swift Package Manager floors raised to match.
+  No source changes were needed. Google Mobile Ads 13.4+ requires Xcode 26.2 or later, so building
+  an app with this SDK now needs it too.
+- The Prebid Server header `highfivveiOSSDKVersion` carries the real SDK version (it was the
+  literal `TODO`), so requests can be attributed to a release. The release workflow stamps the tag
+  version into `SdkVersion.swift`; local builds report `0.0.0-local`.
+
+- Banner slots now also request a 300x250 medium rectangle when the remote config does not list it
+  (`HighfivveAdSlot.requestSizes`, appended after the configured sizes, for the Google request and
+  the Prebid ad unit). The configs only list small formats (320x50, 320x75, ...), which carry little
+  demand. It only helps when the ad unit in Ad Manager allows 300x250; a loaded 300x250 is 250
+  points tall, so the host app's banner container must be able to grow to that height.
+
+### Fixed
+
+- With Prebid 3.4 no ad loaded at all: Prebid no longer keeps the `BannerAdUnit` alive while its
+  request is in flight (3.0 did), the SDK only held it in a local variable, so the unit was
+  deallocated when `performBidRequest` returned, the bid callback never ran and the Google request
+  was never sent ("SWIFT TASK CONTINUATION MISUSE ... leaked its continuation" in the console). The
+  ad unit is now held until the auction finishes. Found by running the SDK on the iOS simulator
+  against the updated dependencies; the same app with Prebid 3.0.2 loaded ads.
+- Prebid key-values never reached Google on iOS. `AdManagerRequest.customTargeting` is `nil` on a
+  new request, and `request.customTargeting?[key] = value` is a silent no-op on `nil`, so a winning
+  Prebid bid could not be matched by the header-bidding line items. Banner and interstitial now
+  assign the dictionary (`applyCustomTargeting`). Request tracing logs both what Prebid returned
+  and what is actually on the request.
+- `HighfivveBannerAdViewController.stopAutoRefresh()` is now final: a load result arriving after the
+  banner was disposed no longer re-arms the refresh timer.
+
 ## [0.0.81] - 2026-08-26
 
 ### Fixed

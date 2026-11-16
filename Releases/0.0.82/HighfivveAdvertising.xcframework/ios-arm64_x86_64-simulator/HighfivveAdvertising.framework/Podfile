@@ -1,0 +1,22 @@
+# Podfile for HighfivveAdvertising framework project
+platform :ios, '15.0'
+                
+project 'HighfivveAdvertising', {
+    'Debug' => :debug,
+    'Profile' => :release,
+    'Release' => :release,
+}
+                
+
+target 'HighfivveAdvertising' do
+ use_frameworks! :linkage => :static
+ use_modular_headers!
+
+ pod 'Google-Mobile-Ads-SDK', '~> 13.12'
+ pod 'PrebidMobile', '~> 3.4.1'
+ pod 'GoogleMobileAdsMediationFacebook'
+ pod 'GoogleMobileAdsMediationInMobi', '= 11.4.1.0'
+ pod 'InMobiSDK', '= 11.4.1'
+     
+end
+        

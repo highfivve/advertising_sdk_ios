@@ -45,6 +45,7 @@ and may result in a lack of service or functionality.
   - [6. Handling Banner Ad Events](#6-handling-banner-ad-events)
   - [7. Displaying an Interstitial Ad](#7-displaying-an-interstitial-ad)
   - [8. Audit / Debug Mode](#8-audit--debug-mode)
+  - [9. Request Tracing (Debug Logging)](#9-request-tracing-debug-logging)
 - [Supported Ad Networks](#supported-ad-networks)
 - [API Reference](#api-reference)
 - [Privacy](#privacy)
@@ -66,7 +67,7 @@ and may result in a lack of service or functionality.
 ## Requirements
 
 - iOS 15.0 or later
-- Xcode 14.0 or later
+- Xcode 26.2 or later (required by the Google Mobile Ads SDK 13.4+)
 - Swift 5.5 or later
 
 ## Installation
@@ -75,7 +76,7 @@ and may result in a lack of service or functionality.
 
 1. In Xcode, select **File > Add Packages...**
 2. Enter the repository URL for this SDK: `https://github.com/highfivve/advertising_sdk_ios.git`
-3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.81`).
+3. Set the **Dependency Rule** (e.g., "Up to Next Major Version" from `0.0.82`).
 4. Choose the target where you want to add the package.
 5. Ensure `HighfivveAdvertising` is added to your target's "Frameworks, Libraries, and Embedded
    Content" section and is set to "Embed & Sign".
@@ -85,7 +86,7 @@ and may result in a lack of service or functionality.
 1. Add the following line to your `Podfile`:
 
 ```ruby 
-pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.81'
+pod 'HighfivveAdvertising', :git => 'https://github.com/highfivve/advertising_sdk_ios.git', :tag => '0.0.82'
 ```
 
 2. Run `pod install --repo-update` in your terminal.
@@ -309,8 +310,17 @@ reload is required so header bidding runs a fresh auction on every reload, rathe
 Google Ad Manager's own server-side refresh).
 
 * `isAutoRefreshEnabled` - defaults to `true`. Disabling it cancels any pending reload immediately.
+* `setRefreshPaused(_:)` - pauses/resumes the refresh without touching the loaded ad. Call it with
+  `true` while the banner is not viewable (e.g. scrolled off screen): every refresh of a banner
+  nobody sees is a wasted request and counts against fill rate. The first load still happens while
+  paused, so a banner can be prefetched; on resume it refreshes after what is left of the interval.
 * `refreshInterval` - defaults to 30 seconds. Coerced to a minimum of 10 seconds to guard against
   runaway reload loops.
+
+**Requested sizes:** the sizes come from the remote config. The SDK additionally requests a 300x250
+medium rectangle (from Google and Prebid) when the config does not list it, because the small
+formats the configs usually contain carry little demand. It only serves if the ad unit in Ad
+Manager allows 300x250, and a loaded 300x250 is 250 pt tall - make sure the container can grow.
 
 ### 6. Handling Banner Ad Events
 
@@ -398,6 +408,23 @@ HighfivveAdvertisingSdk.instance.openAdInspector(from: self) { error in
 // first time an (unregistered) ad request is made - call this with that value once you have it.
 HighfivveAdvertisingSdk.instance.setTestDeviceIds(["YOUR_TEST_DEVICE_ID"])
 ```
+
+### 9. Request Tracing (Debug Logging)
+
+Off by default. To see exactly what the SDK decides and sends around an ad request, turn tracing on
+(for example from a debug menu, or right after `initialize`):
+
+```swift
+HighfivveAdvertisingSdk.instance.setRequestLoggingEnabled(true)
+```
+
+Then filter the Xcode/Console output by `highfivve-trace`. It logs an environment snapshot (ATT
+status and IDFA availability, consent state incl. what the CMP stored in `UserDefaults`, Prebid
+settings), the config fetch, every ad request (ad unit, sizes, the key-values Prebid returned versus
+what is actually on the request, consent extras) with its result, and the exact OpenRTB
+request/response exchanged with Prebid Server. Unlike audit mode it does not swap ad units or add
+`test:1` to Prebid auctions, so ads behave as in production. The output can contain the advertising
+ID and consent string - never enable it for end users.
 
 ## Supported Ad Networks
 
